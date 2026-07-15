@@ -1,79 +1,95 @@
-def add(x, y):
-    return x + y
+def add(numbers):
+    if len(numbers) != 3:
+        return "Error: Addition requires exactly 3 numbers."
+    try:
+        return sum(numbers)
+    except TypeError:
+        return "Error: All items must be numbers."
 
-def divide(x, y):
-    if y == 0:
-        return "Error! Division by zero."
-    return x / y
+def multiply(numbers):
+    if len(numbers) != 3:
+        return "Error: Multiplication requires exactly 3 numbers."
+    try:
+        result = 1
+        for n in numbers:
+            result *= n
+        return result
+    except TypeError:
+        return "Error: All items must be numbers."
 
-def modulo(x, y):
-    if y == 0:
-        return "Error! Modulo by zero."
-    return x % y
+def subtract(numbers):
+    if len(numbers) != 2:
+        return "Error: Subtraction requires exactly 2 numbers."
+    try:
+        return numbers[0] - numbers[1]
+    except TypeError:
+        return "Error: All items must be numbers."
 
-def subtract(x, y, z):
-    return x - y - z
-
-def multiply(x, y, z):
-    return x * y * z
-
-def get_number(prompt):
-    """Repeatedly asks the user for a valid positive or negative number."""
+def get_number_input(prompt):
+    """Safely gets a single positive or negative float from the user."""
     while True:
+        user_input = input(prompt).strip()
         try:
-            return float(input(prompt))
+            return float(user_input)
         except ValueError:
-            print("Invalid input! Please enter numbers only (positive or negative).")
+            print("Invalid input! Please enter a valid number (positive or negative) only.")
 
-def calculator():
+def confirm_exit():
+    """Asks the user to confirm exit using specific words."""
+    yes_options = ['yes', 'y', 'yeah']
+    no_options = ['no', 'n', 'nope']
+    
     while True:
-        print("\nSelect operation:")
-        print("1. Add (2 numbers)")
-        print("2. Divide (2 numbers)")
-        print("3. Modulo / Remainder % (2 numbers)")
-        print("4. Subtract (3 numbers)")
-        print("5. Multiply (3 numbers)")
+        confirm = input("Are you sure you want to exit? (yes/y/yeah or no/n/nope): ").strip().lower()
+        if confirm in yes_options:
+            return True
+        elif confirm in no_options:
+            return False
+        else:
+            print("Invalid choice! Please choose among (yes/y/yeah) to exit or (no/n/nope) to continue.")
+
+# --- MAIN PROGRAM LOOP ---
+def run_calculator():
+    while True:
+        print("\n--- Scientific Calculator ---")
+        print("1. Addition (Needs 3 numbers)")
+        print("2. Multiplication (Needs 3 numbers)")
+        print("3. Subtraction (Needs 2 numbers)")
+        print("4. Exit")
         
-        choice = input("Enter choice (1/2/3/4/5): ").strip()
-
-        # Operations requiring 2 variables
-        if choice in ('1', '2', '3'):
-            num1 = get_number("Enter first number: ")
-            num2 = get_number("Enter second number: ")
-
+        choice = input("Choose an operation (1-4): ").strip()
+        
+        if choice == '4':
+            if confirm_exit():
+                print("Exiting calculator. Goodbye!")
+                break
+            else:
+                print("Returning to the calculator...")
+                continue
+            
+        elif choice in ['1', '2']:
+            print(f"\n--- Enter 3 numbers ---")
+            num1 = get_number_input("Enter first number: ")
+            num2 = get_number_input("Enter second number: ")
+            num3 = get_number_input("Enter third number: ")
+            nums = [num1, num2, num3]
+            
             if choice == '1':
-                print(f"\nResult: {num1} + {num2} = {add(num1, num2)}")
-            elif choice == '2':
-                print(f"\nResult: {num1} / {num2} = {divide(num1, num2)}")
-            elif choice == '3':
-                print(f"\nResult: {num1} % {num2} = {modulo(num1, num2)}")
-
-        # Operations requiring 3 variables
-        elif choice in ('4', '5'):
-            num1 = get_number("Enter first number: ")
-            num2 = get_number("Enter second number: ")
-            num3 = get_number("Enter third number: ")
-
-            if choice == '4':
-                print(f"\nResult: {num1} - {num2} - {num3} = {subtract(num1, num2, num3)}")
-            elif choice == '5':
-                print(f"\nResult: {num1} * {num2} * {num3} = {multiply(num1, num2, num3)}")
-
+                print(f"Result: {add(nums)}")
+            else:
+                print(f"Result: {multiply(nums)}")
+                
+        elif choice == '3':
+            print(f"\n--- Enter 2 numbers ---")
+            num1 = get_number_input("Enter first number: ")
+            num2 = get_number_input("Enter second number: ")
+            nums = [num1, num2]
+            
+            print(f"Result: {subtract(nums)}")
+            
         else:
-            print("Invalid Choice. Please choose a number from 1 to 5.")
-            continue
+            print("Invalid choice! Please choose among options 1, 2, 3, or 4.")
 
-        # Ask the user if they want to continue
-        run_again = input("\nDo you want to continue? (yes/y/yeah or no/n/nope): ").strip().lower()
-        
-        if run_again in ('no', 'n', 'nope'):
-            print("Goodbye!")
-            break
-        elif run_again in ('yes', 'y', 'yeah'):
-            continue
-        else:
-            print("Unknown response, exiting. Goodbye!")
-            break
-
+# To run the calculator:
 if __name__ == "__main__":
-    calculator()
+    run_calculator()
